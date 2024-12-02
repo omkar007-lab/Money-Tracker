@@ -1,10 +1,8 @@
-// /api/index.js (or server.js or app.js depending on your structure)
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/database');
-const transactionRoutes = require('./routes/transactions');
-const mainAmountRoutes = require('./routes/mainAmount');
+const dataRoutes = require('./routes/data.js'); // Import combined data routes
 
 dotenv.config();
 connectDB();
@@ -14,12 +12,12 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing for POST requests
 
-// Routes
-app.use('/api/transactions', transactionRoutes); // Transactions route
-app.use('/api/mainAmount', mainAmountRoutes); // Main balance route
+// Use combined routes for mainAmount and transactions
+app.use('/api', dataRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
+  console.error(err);  // Log the error details for debugging
   res.status(err.status || 500).json({ message: err.message || 'Server Error' });
 });
 
